@@ -3,11 +3,10 @@
 > AI-powered agent that detects conversion friction points and recommends data-driven fixes to improve e-commerce revenue
 
 [![Elasticsearch Agent Builder](https://img.shields.io/badge/Built%20with-Elasticsearch%20Agent%20Builder-00BFB3?style=flat-square)](https://www.elastic.co)
-[![ES|QL](https://img.shields.io/badge/Powered%20by-ES%7CQL-FEC514?style=flat-square)](https://www.elastic.co/guide/en/elasticsearch/reference/current/esql.html)
 
 ---
 
-## 🎯 Problem Statement
+## Problem Statement
 
 E-commerce businesses lose **Example: $260 billion annually** to cart abandonment, yet most can't identify WHY users leave. Manual analytics take hours and miss critical patterns. Businesses need real-time, AI-powered friction detection with actionable fix recommendations.
 
@@ -20,7 +19,7 @@ E-commerce businesses lose **Example: $260 billion annually** to cart abandonmen
 
 ---
 
-## 💡 Solution
+## Solution
 
 An intelligent agent built on **Elasticsearch Agent Builder** that:
 
@@ -36,7 +35,7 @@ An intelligent agent built on **Elasticsearch Agent Builder** that:
 
 ---
 
-## 🚀 Demo
+## Demo
 
 ### Sample Agent Conversation:
 
@@ -86,7 +85,7 @@ struggling. Performance + UX disaster causing massive abandonment.
 **[Full response includes Priority 3 + 3-Step Action Plan]**
 
 
-## 🔧 Technical Implementation
+## Technical Implementation
 
 ### Technology Stack
 - **Platform:** Elasticsearch Cloud Serverless (14-day trial)
@@ -165,7 +164,7 @@ struggling. Performance + UX disaster causing massive abandonment.
 
 ---
 
-## 🛠️ 8 Custom ES|QL Tools
+## 8 Custom ES|QL Tools
 
 ### Core Friction Detection Tools
 
@@ -366,7 +365,7 @@ FROM "checkout-flows"
 
 ---
 
-## 📊 Results & Business Impact
+## Results & Business Impact
 
 ### Detection Accuracy
 | Metric | Value | Benchmark | Status |
@@ -400,7 +399,7 @@ FROM "checkout-flows"
 - ✅ Executive summaries (emoji indicators, health scores)
 - ✅ Action plans (week-by-week implementation roadmaps)
 
-## 💭 What I Learned
+## What I Learned
 
 ### Technical Insights
 1. **ES|QL is Powerful** - Complex multi-step aggregations are remarkably concise compared to traditional Query DSL. The `EVAL` and `CASE` functions enable sophisticated business logic directly in queries.

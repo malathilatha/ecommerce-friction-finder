@@ -92,8 +92,18 @@ EXAMPLE QUERIES YOU HANDLE:
 ---
 
 ## Tools Assignment
+### Default Platform Tools
 
-Select **ALL 8 tools** when creating the agent:
+When you create the agent, **5 platform tools are pre-selected by default:**
+- ☑️ platform.core.search
+- ☑️ platform.core.get_document_by_id
+- ☑️ platform.core.get_index_mapping
+- ☑️ platform.core.list_indices
+- ☑️ platform.core.get_workflow_execution_status
+
+**Keep these enabled** - they allow the agent to search your data effectively.
+
+Select **ALL 8 custom tools** when creating the agent:
 
 - ☑️ detect_cart_abandonment
 - ☑️ find_search_failures

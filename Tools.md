@@ -1,4 +1,16 @@
-# Complete Tool Creation Guide
+## Built-in Tools (Pre-configured)
+
+Elastic Agent Builder includes **5 default platform tools** that are automatically available:
+
+- `platform.core.search` - Searches across Elasticsearch indices
+- `platform.core.get_document_by_id` - Retrieves specific documents
+- `platform.core.get_index_mapping` - Gets index structure
+- `platform.core.list_indices` - Lists available indices
+- `platform.core.get_workflow_execution_status` - Tracks workflows
+
+**Note:** When creating your agent, these 5 tools are automatically selected. Keep them enabled - they help the agent search and retrieve data efficiently. Your 8 custom tools work alongside these platform tools.
+
+# Custom Tool Creation Guide
 
 This document contains all 8 custom ES|QL tools for the E-commerce Friction Finder agent.
 

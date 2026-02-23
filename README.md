@@ -171,19 +171,6 @@ struggling. Performance + UX disaster causing massive abandonment.
 #### 1️⃣ detect_cart_abandonment
 **Purpose:** Identifies checkout abandonment patterns and calculates rates per step
 
-```esql
-FROM "checkout-flows"
-| WHERE timestamp > NOW() - 7 days
-| STATS 
-    total_checkouts = COUNT(*),
-    abandoned_count = SUM(CASE(abandoned == true, 1, 0)),
-    completed_count = SUM(CASE(completed == true, 1, 0))
-  BY step
-| EVAL abandonment_rate = ROUND((abandoned_count / total_checkouts) * 100, 2)
-| EVAL completion_rate = ROUND((completed_count / total_checkouts) * 100, 2)
-| SORT abandonment_rate DESC
-```
-
 **Key Metrics Detected:**
 - 45% abandonment rate at payment step
 - 0% completion rate at payment (critical!)
@@ -193,19 +180,6 @@ FROM "checkout-flows"
 
 #### 2️⃣ find_search_failures
 **Purpose:** Identifies zero-result searches that indicate missing products or poor search config
-
-```esql
-FROM "search-queries"
-| WHERE results_count == 0 AND timestamp > NOW() - 7 days
-| STATS 
-    failure_count = COUNT(*),
-    unique_users = COUNT_DISTINCT(user_id)
-  BY search_term
-| WHERE failure_count > 2
-| EVAL impact_score = failure_count * unique_users
-| SORT failure_count DESC
-| LIMIT 20
-```
 
 **Key Insights:**
 - 44% search failure rate
@@ -217,21 +191,6 @@ FROM "search-queries"
 #### 3️⃣ identify_slow_pages
 **Purpose:** Detects performance bottlenecks causing user frustration and bounces
 
-```esql
-FROM "user-sessions"
-| WHERE timestamp > NOW() - 7 days
-| STATS 
-    avg_load_time = ROUND(AVG(page_load_time), 2),
-    max_load_time = ROUND(MAX(page_load_time), 2),
-    page_views = COUNT(*),
-    bounces = SUM(CASE(bounce == true, 1, 0))
-  BY page_url
-| WHERE page_views > 10
-| EVAL bounce_rate = ROUND((bounces / page_views) * 100, 2)
-| SORT avg_load_time DESC
-| LIMIT 15
-```
-
 **Key Findings:**
 - Payment page: 5.81s average (target: <3s)
 - 73% bounce rate on slow pages
@@ -242,23 +201,6 @@ FROM "user-sessions"
 #### 4️⃣ analyze_checkout_steps
 **Purpose:** Analyzes time spent at each step to identify friction and confusion
 
-```esql
-FROM "checkout-flows"
-| WHERE timestamp > NOW() - 7 days
-| STATS 
-    avg_time = ROUND(AVG(time_spent), 1),
-    max_time = MAX(time_spent),
-    total_sessions = COUNT(*),
-    completion_rate = ROUND((SUM(CASE(completed == true, 1, 0)) / COUNT(*)) * 100, 2)
-  BY step
-| EVAL status = CASE(
-    avg_time > 60, "CRITICAL - Too slow",
-    avg_time > 30, "WARNING - Slow",
-    "OK"
-  )
-| SORT avg_time DESC
-```
-
 **Critical Insight:**
 - Payment step: 117.4 seconds average (should be <30s)
 - Users spending 2+ minutes indicates UX/technical issues
@@ -267,23 +209,6 @@ FROM "checkout-flows"
 
 #### 5️⃣ track_error_patterns
 **Purpose:** Tracks HTTP errors (404s, 500s) that break user experience
-
-```esql
-FROM "error-logs"
-| WHERE timestamp > NOW() - 7 days
-| STATS 
-    error_count = COUNT(*),
-    unique_users_affected = COUNT_DISTINCT(user_id)
-  BY url
-| WHERE error_count > 3
-| EVAL severity = CASE(
-    error_count > 20, "HIGH",
-    error_count > 10, "MEDIUM",
-    "LOW"
-  )
-| SORT error_count DESC
-| LIMIT 15
-```
 
 **Pattern Detected:**
 - 129 errors across critical pages
@@ -297,20 +222,6 @@ FROM "error-logs"
 #### 6️⃣ friction_summary_dashboard
 **Purpose:** Provides executive-level health score across all metrics
 
-```esql
-FROM "checkout-flows"
-| WHERE timestamp > NOW() - 7 days
-| STATS 
-    cart_abandonment_rate = ROUND((SUM(CASE(abandoned == true, 1, 0)) / COUNT(*)) * 100, 2),
-    total_revenue_at_risk = ROUND(SUM(CASE(abandoned == true, cart_value, 0)), 0)
-| EVAL health_score = CASE(
-    cart_abandonment_rate < 15, "EXCELLENT",
-    cart_abandonment_rate < 25, "GOOD", 
-    cart_abandonment_rate < 35, "NEEDS ATTENTION",
-    "CRITICAL"
-  )
-```
-
 **Output:**
 - Overall health score: "NEEDS ATTENTION"
 - $220K monthly revenue at risk
@@ -321,19 +232,6 @@ FROM "checkout-flows"
 #### 7️⃣ calculate_revenue_impact
 **Purpose:** Translates technical metrics into business outcomes ($$$)
 
-```esql
-FROM "checkout-flows"
-| WHERE timestamp > NOW() - 7 days
-| STATS 
-    total_carts = COUNT_DISTINCT(checkout_id),
-    abandoned_carts = SUM(CASE(abandoned == true, 1, 0)),
-    avg_cart_value = ROUND(AVG(cart_value), 2)
-| EVAL 
-    monthly_abandoned = abandoned_carts * 4,
-    revenue_loss_monthly = ROUND(monthly_abandoned * avg_cart_value, 0),
-    recovery_30_percent = ROUND(revenue_loss_monthly * 0.30, 0)
-```
-
 **Business Translation:**
 - 202 abandoned carts/week × 4 = 808/month
 - 808 × $272.59 avg = $220,253 monthly loss
@@ -343,20 +241,6 @@ FROM "checkout-flows"
 
 #### 8️⃣ compare_weekly_trends
 **Purpose:** Week-over-week comparison to track if friction is improving/worsening
-
-```esql
-FROM "checkout-flows"
-| EVAL week = CASE(
-    timestamp > NOW() - 7 days, "current_week",
-    timestamp > NOW() - 14 days, "previous_week",
-    "older"
-  )
-| WHERE week IN ("current_week", "previous_week")
-| STATS 
-    abandonment_rate = ROUND((SUM(CASE(abandoned == true, 1, 0)) / COUNT(*)) * 100, 2),
-    avg_cart_value = ROUND(AVG(cart_value), 2)
-  BY week
-```
 
 **Trend Analysis:**
 - Shows if improvements are working
